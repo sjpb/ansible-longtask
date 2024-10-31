@@ -1,0 +1,19 @@
+- name: Show output
+  command: cat slow.out
+  register: slow_out
+
+- debug:
+    msg: "{{ slow_out.stdout_lines }}" # could avoid this with debug plugin
+
+- pause:
+    seconds: 1
+
+- name: Check on slow command
+  async_status:
+    jid: "{{ slow.ansible_job_id }}"
+  register: job_result
+  changed_when: false
+
+- name: Show output
+  include_tasks: loop.yml
+  when: not job_result.finished

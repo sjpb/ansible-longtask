@@ -1,0 +1,14 @@
+- hosts: localhost
+  become: false
+  gather_facts: false
+  vars:
+    n_times: 10
+  tasks:
+    - name: Run slow command
+      shell: ./slow.sh > slow.out
+      async: 1000
+      poll: 0
+      register: slow
+
+    - name: Show output
+      include_tasks: loop.yml
